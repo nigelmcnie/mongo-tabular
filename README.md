@@ -25,3 +25,34 @@ Grab `mongorc.js`, put it in `$HOME/.mongorc.js`. Start mongo. Call `.t()` on cu
 objects (e.g. the return result of `find()`). You're welcome.
 
 Improvements most welcome. Mongodb devs, plz consider something similar for upstream?
+
+Options to .t()
+---------------
+You can pass `.t()` a hash with the following keys:
+
+* limit: Limits the number of rows in the output (which defaults to 20)
+* maxlen: Values longer than this will be truncated to this length, to prevent stupidly long output (default 50)
+* undef: A string representing what should be shown when a value is undefined for a given document
+
+```
+dev> db.survey.find().t({limit: 1, maxlen: 200})
++--------------------------+----------+--------------+-------------------------------------+---------------------------------+--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-------------------+
+|           _id            |   _cls   |    _types    |               created               |           description           |          owner           |                                                                                             questions                                                                                             | status |       title       | 
++--------------------------+----------+--------------+-------------------------------------+---------------------------------+--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-------------------+
+| 50457507fe75bd7531268485 | "Survey" | [ "Survey" ] | ISODate("2012-09-04T03:27:03.161Z") | "lkjasd\r\n\r\ntext formatting" | 503af0a3fe75bd735335a27b | [ { "_types" : [ "Question" ], "required" : false, "label" : "How?", "_cls" : "Question", "label_text" : "", "id" : "oLM8w83sTaXEm5RyZ6yQXNcjncn2pJHLyPFe9_7XKs", "show_other" : false, "type"... | "open" | "My first survey" | 
++--------------------------+----------+--------------+-------------------------------------+---------------------------------+--------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-------------------+
+```
+
+Improving output formatting further
+-----------------------------------
+Observe that you can still pass useful things to `.find()`, for example to ditch columns from the output:
+
+```
+dev> db.survey.find(null, {questions: 0}).t({maxlen: 200})
++--------------------------+----------+--------------+-------------------------------------+---------------------------------+--------------------------+--------+--------------------+
+|           _id            |   _cls   |    _types    |               created               |           description           |          owner           | status |       title        | 
++--------------------------+----------+--------------+-------------------------------------+---------------------------------+--------------------------+--------+--------------------+
+| 50457507fe75bd7531268485 | "Survey" | [ "Survey" ] | ISODate("2012-09-04T03:27:03.161Z") | "lkjasd\r\n\r\ntext formatting" | 503af0a3fe75bd735335a27b | "open" | "My first survey"  | 
+| 5068fcbefe75bd3063635bd6 | "Survey" | [ "Survey" ] | ISODate("2012-10-01T02:15:26.114Z") | "Just to test another one"      | 503af0a3fe75bd735335a27b | "open" | "My second survey" | 
++--------------------------+----------+--------------+-------------------------------------+---------------------------------+--------------------------+--------+--------------------+
+```
