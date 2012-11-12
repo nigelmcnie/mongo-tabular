@@ -21,5 +21,7 @@ dev> db.survey.find().t()
 +--------------------------+----------+--------------+-------------------------------------+---------------------------------+--------------------------+---------------------------------------------------+--------+--------------------+
 ```
 
-Grab mongorc.js, put it in $HOME/.mongorc.js. Start mongo. Call .t() on cursor
-objects (e.g. the return result of find()). You're welcome.
+Grab `mongorc.js`, put it in `$HOME/.mongorc.js`. Start mongo. Call `.t()` on cursor
+objects (e.g. the return result of `find()`). You're welcome.
+
+Improvements most welcome. Mongodb devs, plz consider something similar for upstream?
